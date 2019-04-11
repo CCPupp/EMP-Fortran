@@ -12,9 +12,9 @@ def isomer(tau, drrho, drrhoh, fjh, q, qh, rho, rhoh, r, aaiso, coniso, eergi, e
     l = 1
 
     while (l < niso):
-        exki[l] = math.exp(-tiso*dii[l])
+        exxi[l] = math.exp(-tiso*dii[l])
         rtkii[l] = math.sqrt(tiso*dii[l])
-        scriso[l] = ai[l]*exxi[l]
+        soriso[l] = ai[l]*exxi[l]
         l += 1
 
     i = 1
