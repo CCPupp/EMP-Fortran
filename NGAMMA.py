@@ -24,58 +24,68 @@ Parameter additionally read in the second bottom loop: DRRHO[250][15]
 
 import math
 
-def NGAMMA(TAU, TPEAK, R, CONJ, CONQ, RHOH, DRRHOH, FC, FF, RERG, EERG, EG, BB, AA, SN, NGROUP, FJH, QH, RHO, DRRHO, RGI, Q, NTM1, NDR, NT) :
-	if (TAU > TPEAK) : # TAU and TPEAK are COMMON; if TAU <= TPEAK, NGAMMA is skipped entirely
-		TROOT = math.sqrt(TAU – TPEAK) # TAU and TPEAK are COMMON
-		i = 0
-		while (i < NDR) : # NDR is COMMON; top layer of nested loops, common to both nests
-			RI = 1.0 / R[i] # R[250] is COMMON
-			CJ = CONJ * RI**2 # CONJ is COMMON
-			CQ = CONQ * RI**2 # CONQ is COMMON
-			j = 0
-			while (j < NT) : # NT is COMMON; middle layer of first nest
-				CUR = 0.0
-				QRH = 0.0
-				CQH = CQ * RHOH[i][j] # RHOH[250][16] is COMMON
-				AVRAD = DRRHOH[i][j] * RI # DRRHOH[250][16] is COMMON
-				k = 0
-				while (k < NGROUP) : # NGROUP is COMMON; bottom layer of first nest
-					GMFP = DRRHOH[i][j] * RGI[k] # DRRHOH[250][16] and RGI[50] are COMMON
-					EMFP = math.exp(-GMFP)
-					FACTO = FC[k] + FF[k] * GMFP # FC[50] and FF[50] are COMMON
-					CONSJ = CJ * RERG[k] * EMFP # RERG[50] is COMMON
-					CONSQ = CQH * EERG[k] * EMFP # EERG[50] is COMMON
-					AJ = AVRAD * 2.055e7 * math.sqrt(GMFP)
-					AH = (1.186 – 0.062 * EG[k]) * AJ # EG[50] is COMMON
-					FKJ = FACTO * 1.0e4 / (1.0 + BB[k] * GMFP) # BB[50] is COMMON
-					FKQ = FACTO * 1.0e4 / (1.1 + AA[k] * GMFP) # AA[50] is COMMON
-					FBJ = 1.0 – math.exp(–TROOT * FKJ) * (TROOT * FKJ + 1.0)
-					FBQ = 1.0 – math.exp(–TROOT * FKQ) * (TROOT * FKQ + 1.0)
-					BUFJ = 1.0 + 2.0 * AJ * FBJ / (FKJ**2)
-					BUFQ = 1.0 + 2.0 * AH * FBQ / (FKQ**2)
-					CUR = CONSJ * SN[k] * BUFJ + CUR # SN[10] is COMMON
-					QRH = CONSQ * SN[k] * BUFQ + QRH # SN[10] is COMMON
-					k += 1
-				FJH[i][j] = CUR + FJH[i][j] # FJH[250][16] is COMMON
-				QH[i][j] = QRH + QH[i][j] # QH[250][16] is COMMON
-				j += 1
-			j = 0
-			while (j < NTM1) : # NTM1 is COMMON; middle layer of second nest
-				QRG = 0.0
-				CQG = CQ * RHO[i][j] # RHO[250][15] is COMMON
-				AVRAD = DRRHO[i][j] * RI # DRRHO[250][15] is COMMON
-				k = 0
-				while (k < NGROUP) : # NGROUP is COMMON; bottom layer of second nest
-					GMFP = DRRHO[i][j] * RGI[k] # DRRHO[250][15] and RGI[50] are COMMON
-					FACTO = FC[k] + FF[k] + GMFP # FC[50] and FF[50] are COMMON
-					CONSG = CQG * EERG[k] * math.exp(–GMFP) # EERG[50] is COMMON
-					AG = AVRAD * (1.186 – 0.062 * EG[k]) * 2.055e7 * math.sqrt(GMFP) # EG[50] is COMMON
-					FKG = FACTO * 1.0e4 / (1.1 + AA[k] * GMFP) # AA[50] is COMMON
-					FBG = 1.0 – math.exp(–TROOT * FKG) * (TROOT * FKG + 1.0)
-					BUFG = 1.0 + 2.0 * AG * FBG / (FKG**2)
-					QRG = CONSG * SN[k] * BUFG + QRG # SN[10] is COMMON
-					k += 1
-				Q[i][j] = QRG + Q[i][j] # Q[250][16] is COMMON
-				j += 1
-			i += 1
-	return
+
+def NGAMMA(TAU, TPEAK, R, CONJ, CONQ, RHOH, DRRHOH, FC, FF, RERG, EERG, EG, BB, AA, SN, NGROUP, FJH, QH, RHO, DRRHO, RGI, Q, NTM1, NDR, NT):
+    if (TAU > TPEAK):  # TAU and TPEAK are COMMON; if TAU <= TPEAK, NGAMMA is skipped entirely
+        TROOT = math.sqrt(TAU – TPEAK)  # TAU and TPEAK are COMMON
+        i = 0
+        while (i < NDR):  # NDR is COMMON; top layer of nested loops, common to both nests
+            RI = 1.0 / R[i]  # R[250] is COMMON
+            CJ = CONJ * RI**2  # CONJ is COMMON
+            CQ = CONQ * RI**2  # CONQ is COMMON
+            j = 0
+            while (j < NT):  # NT is COMMON; middle layer of first nest
+                CUR = 0.0
+                QRH = 0.0
+                CQH = CQ * RHOH[i][j]  # RHOH[250][16] is COMMON
+                AVRAD = DRRHOH[i][j] * RI  # DRRHOH[250][16] is COMMON
+                k = 0
+                while (k < NGROUP):  # NGROUP is COMMON; bottom layer of first nest
+                    # DRRHOH[250][16] and RGI[50] are COMMON
+                    GMFP = DRRHOH[i][j] * RGI[k]
+                    EMFP = math.exp(-GMFP)
+                    # FC[50] and FF[50] are COMMON
+                    FACTO = FC[k] + FF[k] * GMFP
+                    CONSJ = CJ * RERG[k] * EMFP  # RERG[50] is COMMON
+                    CONSQ = CQH * EERG[k] * EMFP  # EERG[50] is COMMON
+                    AJ = AVRAD * 2.055e7 * math.sqrt(GMFP)
+                    AH = (1.186 – 0.062 * EG[k]) * AJ  # EG[50] is COMMON
+                    FKJ = FACTO * 1.0e4 / \
+                        (1.0 + BB[k] * GMFP)  # BB[50] is COMMON
+                    FKQ = FACTO * 1.0e4 / \
+                        (1.1 + AA[k] * GMFP)  # AA[50] is COMMON
+                    FBJ = 1.0 – math.exp(–TROOT * FKJ) * (TROOT * FKJ + 1.0)
+                    FBQ = 1.0 – math.exp(–TROOT * FKQ) * (TROOT * FKQ + 1.0)
+                    BUFJ = 1.0 + 2.0 * AJ * FBJ / (FKJ**2)
+                    BUFQ = 1.0 + 2.0 * AH * FBQ / (FKQ**2)
+                    CUR = CONSJ * SN[k] * BUFJ + CUR  # SN[10] is COMMON
+                    QRH = CONSQ * SN[k] * BUFQ + QRH  # SN[10] is COMMON
+                    k += 1
+                FJH[i][j] = CUR + FJH[i][j]  # FJH[250][16] is COMMON
+                QH[i][j] = QRH + QH[i][j]  # QH[250][16] is COMMON
+                j += 1
+            j = 0
+            while (j < NTM1):  # NTM1 is COMMON; middle layer of second nest
+                QRG = 0.0
+                CQG = CQ * RHO[i][j]  # RHO[250][15] is COMMON
+                AVRAD = DRRHO[i][j] * RI  # DRRHO[250][15] is COMMON
+                k = 0
+                while (k < NGROUP):  # NGROUP is COMMON; bottom layer of second nest
+                    # DRRHO[250][15] and RGI[50] are COMMON
+                    GMFP = DRRHO[i][j] * RGI[k]
+                    # FC[50] and FF[50] are COMMON
+                    FACTO = FC[k] + FF[k] + GMFP
+                    # EERG[50] is COMMON
+                    CONSG = CQG * EERG[k] * math.exp(–GMFP)
+                    # EG[50] is COMMON
+                    AG = AVRAD * (1.186 – 0.062 * EG[k]) * 2.055e7 * math.sqrt(GMFP)
+                    FKG = FACTO * 1.0e4 / \
+                        (1.1 + AA[k] * GMFP)  # AA[50] is COMMON
+                    FBG = 1.0 – math.exp(–TROOT * FKG) * (TROOT * FKG + 1.0)
+                    BUFG = 1.0 + 2.0 * AG * FBG / (FKG**2)
+                    QRG = CONSG * SN[k] * BUFG + QRG  # SN[10] is COMMON
+                    k += 1
+                Q[i][j] = QRG + Q[i][j]  # Q[250][16] is COMMON
+                j += 1
+            i += 1
+    return
