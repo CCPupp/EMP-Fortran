@@ -3,9 +3,9 @@
 Note that variables in all-caps are COMMON, while the rest are local
 
 Possible problems:
---Loop variables are used as array indeces and also sometimes in calculations, but arrays start at 1 in FORTRAN instead of 0 in Python
+--Loop variables are used as array indeces and also sometimes in calculations, but arrays start at 1 in FORTRAN instead of 0 in Python.
+I believe I've corrected for this issue, but if something fails while testing this subroutine, this is likely the error.
 --The SN[10] array may actually be SN[50]
---[m][m] was used as a multidimensional array index in two places, strongly suspect those are misprints and one of the 'm's is supposed to be an 'n'
 
 Original FORTRAN code (block of COMMON variables omitted):
 DIMENSION DNP(10)
@@ -35,28 +35,29 @@ DO  10  M=1, NGRPN
 def SOURCEN(NGRPN, DN, RDT, CN, NGROUP, SN, HZ) :
 	m = 0
 	while (m < NGRPN) :
-		dnp[m]=DN[m]
+		dnp[m]=DN[m] #10
 		m += 1
 	i = 0
 	while (i < NGRPN) :
-		m = NGRPN + 1 – i
+		m = NGRPN – i
 		sum = 0.0
 		j = 0
 		while (j <= i) :
-			n = NGRPN + 1 – j
+			n = NGRPN – j
 			if  (i <= j) :
-				sum = sum + (RDT - CN[m][m]) * dnp[m]
+				sum = sum + (RDT - CN[m][m]) * dnp[m] #20
 			else :
-				sum = sum + CN[n][m] * (dnp[n] + DN[n])
-			j += 1
+				sum = sum + CN[n][m] * (dnp[n] + DN[n]) #30
+			j += 1 #40, effectively
 		DN[m] = sum / (RDT + CN[m][m])
-		i += 1
+		i += 1 #50, effectively
 	k = 0
 	while (k < NGROUP)
 		SN[k] = 0.0
 		m = 0
 		while (m < NGRPN)
 			SN[k] = SN[k] + HZ[k][m] * DN[m]
-			m += 1
-		k += 1
+			m += 1 #60, effectively
+		k += 1 #70, effectively
 	
+
