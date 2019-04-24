@@ -1,8 +1,9 @@
 import sys
 import math
+import convo
 
 
-def do(TDR, SOURCE, SOR, DTDR, TAU, TPEAK, R, CONJ, CONQ, RHOH, DRRHOH, FC, FF, RERG, EERG, EG, BB, AA, SN, NGROUP, FJH, QH, RHO, DRRHO, RGI, Q, NTM1, NDR, NT):
+def do(DECG, FREG, DECQ, DECJ, L, EXP, NINCR, TDR, SOURCE, SOR, DTDR, TAU, TPEAK, R, CONJ, CONQ, RHOH, DRRHOH, FC, FF, RERG, EERG, EG, BB, AA, SN, NGROUP, FJH, QH, RHO, DRRHO, RGI, Q, NTM1, NDR, NT):
     DIFF = TAU - NINCR * DTDR
     N = 1
     while NINCR != N:  # Loop
@@ -20,12 +21,14 @@ def do(TDR, SOURCE, SOR, DTDR, TAU, TPEAK, R, CONJ, CONQ, RHOH, DRRHOH, FC, FF, 
         R2I = RI * RI
         CJ = CONJ * R2I
         CQ = CONQ * R2I
+        J = 0
         while NT != J:
             CUR = 0
             QRH = 0
             CQH = CQ * RHOH[I][J]
             AVRAD = DRRHOH[I][J] * RI
             SAVRAD = math.sqrt(AVRAD)
+            K = 0
             while NGROUP != K:
                 GMFP = DRRHOH[I][J] * RGI[K]
                 EMFP = EXP[-GMFP]
@@ -41,7 +44,7 @@ def do(TDR, SOURCE, SOR, DTDR, TAU, TPEAK, R, CONJ, CONQ, RHOH, DRRHOH, FC, FF, 
                 CONVJ = 0.0
                 CONVQ = 0.0
                 if NINCR > 0:
-                    CONVO2()  # Call convolution integral 2
+                    convo.convo2()  # Call convolution integral 2
                     CONVJ = AJ * CONVJ
                     CONVQ = AH * CONVQ
                 else:
@@ -72,7 +75,7 @@ def do(TDR, SOURCE, SOR, DTDR, TAU, TPEAK, R, CONJ, CONQ, RHOH, DRRHOH, FC, FF, 
                 DCG = -SAVRAD * FKG
                 CONVG = 0.0
                 if NINCR > 0:
-                    CONVO1()
+                    convo.convo1()
                     CONVG = AG * CONVG
                 else:
                     DELFRG = AG * EXP[DCG * ROOTL]
@@ -85,7 +88,7 @@ def do(TDR, SOURCE, SOR, DTDR, TAU, TPEAK, R, CONJ, CONQ, RHOH, DRRHOH, FC, FF, 
         I += 1
 
 
-def prompt(TDR, SOURCE, SOR, DTDR, TAU, TPEAK, R, CONJ, CONQ, RHOH, DRRHOH, FC, FF, RERG, EERG, EG, BB, AA, SN, NGROUP, FJH, QH, RHO, DRRHO, RGI, Q, NTM1, NDR, NT):
+def prompt(DECG, FREG, DECQ, DECJ, L, EXP, ifit, DT, DT2, NMAX, TRIP, TDR, SOURCE, SOR, DTDR, TAU, TPEAK, R, CONJ, CONQ, RHOH, DRRHOH, FC, FF, RERG, EERG, EG, BB, AA, SN, NGROUP, FJH, QH, RHO, DRRHO, RGI, Q, NTM1, NDR, NT):
     if ifit == 0:
         if (TAU + DT + DT2) < 0:
             # do convolution
@@ -94,7 +97,7 @@ def prompt(TDR, SOURCE, SOR, DTDR, TAU, TPEAK, R, CONJ, CONQ, RHOH, DRRHOH, FC, 
                 print("Error in prompt")
                 return
             else:
-                do()
+                do(DECG, FREG, DECQ, DECJ, L, EXP, NINCR, TDR, SOURCE, SOR, DTDR, TAU, TPEAK, R, CONJ, CONQ, RHOH, DRRHOH, FC, FF, RERG, EERG, EG, BB, AA, SN, NGROUP, FJH, QH, RHO, DRRHO, RGI, Q, NTM1, NDR, NT)
     elif ifit == 1:
         # GOTO 270
         return
@@ -108,4 +111,4 @@ def prompt(TDR, SOURCE, SOR, DTDR, TAU, TPEAK, R, CONJ, CONQ, RHOH, DRRHOH, FC, 
                 print("Error in prompt")
                 return
             else:
-                do()
+                do(DECG, FREG, DECQ, DECJ, L, EXP, NINCR, TDR, SOURCE, SOR, DTDR, TAU, TPEAK, R, CONJ, CONQ, RHOH, DRRHOH, FC, FF, RERG, EERG, EG, BB, AA, SN, NGROUP, FJH, QH, RHO, DRRHO, RGI, Q, NTM1, NDR, NT)
