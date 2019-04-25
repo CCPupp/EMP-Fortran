@@ -33,15 +33,39 @@ def convert(cn, eg, grphi, grplo, hz, ngrpn)
             #if neg go to 40, if 0 go to 60, if pos go to 30
             if ((grphi(k) - g2(i)) > 0): #if pos go to 30
                 i = 10                                                       #30
-                #GO TO 230!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!FIX THIS!!!
+                #GO TO 230
 
             elif ((grphi(k) - g2(i)) < 0): # if negative go to 40
                 if ((grphi(k) - g1(i)) <= 0 ): #if neg or 0 go to 50         #40
                     j = i                                                    #50
                 elif ((grphi(k) - g1(i)) > 0): #if pos go to 60
-                    #GO TO 60!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!FIX THIS!!!
-            elif (((grphi(k) - g2(i)) == 0):    ##!!!!!!!!!!!!!!FIX THIS!!!!!
-                if ((k - 1) <= 0): #if neg or 0 go to 70, if pos go to 120   #60
+                    #GO TO 160
+                        #ADDING EVERYTHING FROM 160 TO END OF LOOP TO FIX THIS: 
+                    m = 1
+                    while (m < ngrpn):                                                #160-copy
+                        hsum = 0.0
+                        if ((i - j - 1) > 0):
+                            l1 = j + 1                                                #170-copy
+                            l2 = i - 1
+                    
+                            l = l1
+                            while (l < l2):
+                                hsum = hsum + h(l,m) * g(l)
+                            #end while loop                                           #180-copy
+
+                        if ((i - j - 1) == 0): ##THIS IS WRONG, CLEAN THIS UP
+                            hsum = hsum + p2 * h(i,m) * g(i)                          #190-copy
+
+                        if ((i - j - 1) > 0):#THIS IS WRONG, CLEAN THIS UP
+                            hsum = hsum + p1 * h(j,m) * g(j)                          #200-copy
+                            hz(k,m) = hsum/eg(k)
+                    #CONTINUE end while loop                                          #210-copy
+
+                    ni = 1
+                    #END GO TO 160
+
+            elif (((grphi(k) - g2(i)) == 0): #if 0, go to 60  
+                if ((k - 1) <= 0): #if neg or 0 go to 70                     #60
                     p2 = (grphi(k) - g1(i))/(g2(i) - g1(i))                  #70
                     j1 = 1
                     while (j1 < i):
@@ -58,7 +82,7 @@ def convert(cn, eg, grphi, grplo, hz, ngrpn)
                                 p1 = (g2(j) - grplo(k))/(g2(j)-g1(j))         #110
                                 #go to 160
 
-                elif ((k-1) > 0):
+                elif ((k-1) > 0): #if pos go to 120
                     if ((i - n1) <= 0): #- or 0 goto 130, + goto 140         #120
                         p1 = (grphi(k) - g1(i))/(g2(i)-g1(i)) - p2           #130
                         #then go to 150!
@@ -81,8 +105,10 @@ def convert(cn, eg, grphi, grplo, hz, ngrpn)
                             hsum = hsum + h(l,m) * g(l)
                         #end while loop                                           #180
 
-                    if ((i - j - 1) == 0): ##THIS IS WRONG, CLEAN THIS UP
+                    if ((i - j - 1) == 0): #Seems a little strange - check this again.
                         hsum = hsum + p2 * h(i,m) * g(i)                          #190
+                        hsum = hsum + p1 * h(j,m) * g(j)                          #200-copy
+                        hz(k,m) = hsum/eg(k)                                      #copied as well
 
                     if ((i - j - 1) > 0):#THIS IS WRONG, CLEAN THIS UP
                         hsum = hsum + p1 * h(j,m) * g(j)                          #200
