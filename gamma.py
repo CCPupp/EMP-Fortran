@@ -22,9 +22,10 @@ def gamma(ai, ciso, di, dn, dt, edep, edei, eden, engi, engp, engn, frac, fracis
             ###GO TO 40#################working on this!!!!!!####################################################
                                
         #if ncal =1 go to 40, if ncal = 2 go to 80                 #30
-        if (ncal == 1): 
+        if (ncal == 1):
+
             i = 2
-            while (i < 250): #DO 50 I=2, 250                       #40
+            while (i < 250): #ENDS AT 50                           #40
                 t1 = i * dt                #ORIGINAL FORTRAN HAD T * DT... I think it was supposed to be I * DT???
                 t2 = (i-1) * dt    
                 s1 = source(t1)
@@ -50,13 +51,13 @@ def gamma(ai, ciso, di, dn, dt, edep, edei, eden, engi, engp, engn, frac, fracis
 ##################################end of "working on this"!!!!!#################################################
                     
                 i = 1
-                while (i < 250):                                   #80
+                while (i < 250):                                    #80
                     t = (i - 0.5) * dt
                     total = total + source(t) + dt
                     i += 1
-                #end while loop                                    #90
+                #end while loop                                     #90
                 cay = gcal/total
-        #end last two if statements                                #100
+        #end last two if statements                                 #100
             
         ig = 1
         i = 1
