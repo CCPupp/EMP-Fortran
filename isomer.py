@@ -81,7 +81,7 @@ def isomer(aaiso, ciso, conj, conq, coniso, dii, drrho, drrhoh, eergi, egiso, ex
                     elif (xj2 == 0): 
                         convj = daj + dbj * special.dawsn(xj1)                       #50
                         #GO TO 70
-                    elif (xj2 > 0):
+                    else: #elif (xj2 > 0)
                         convj = daj + dbj * special.dawsn(xj1) + special.dawsn(xj2)  #60
                     #CONTINUE                                                        #70
 
@@ -92,7 +92,7 @@ def isomer(aaiso, ciso, conj, conq, coniso, dii, drrho, drrhoh, eergi, egiso, ex
                     elif (xq2 == 0):
                         convq = daq + dbq * special.dawsn(xq1)                       #90
                         #GO TO 110
-                    elif (xq2 > 0):
+                    else: #elif (xq2 > 0):
                         convq = daq + dbq * (special.dawsn(xq1) + special.dawsn(xq2))#100
                     #CONTINUE                                                        #110
 
@@ -146,9 +146,8 @@ def isomer(aaiso, ciso, conj, conq, coniso, dii, drrho, drrhoh, eergi, egiso, ex
                     elif (xg2 == 0):
                         convg = dag + dbg * special.dawsn(xg1)                        #160
                         #GO TO 180
-                    elif (xg2 > 0):
-                        convg = dag + dbg * \                              
-                            (special.dawsn(xg1) + special.dawsn(xg2))                 #170
+                    else: #elif (xg2 > 0)
+                        convg = dag + dbg * (special.dawsn(xg1) + special.dawsn(xg2)) #170
                     # CONTINUE end if/else                                            #180
 
                 qrg = (convg + soriso[l-1]) * consg * fregi[k-1] + qrg #Changed [x] to [x-1]
