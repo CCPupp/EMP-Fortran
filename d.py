@@ -3,7 +3,7 @@ Possible problems:
 --RAD(1,X) becomes rad[0][X]
 --RAD(2,X) becomes rad[1][X]
 --RHO (1, NT2) becomes RHO[0][NT2 - 1]
---QH (I, J) = QH (I, J) + QH1 (I, J) becomes QH[I][J - 1] = QH[I][J - 1] + QH1[I][J - 1] since J = NT at that late point in the cose
+--QH (I, J) = QH (I, J) + QH1 (I, J) becomes QH[I][J - 1] = QH[I][J - 1] + QH1[I][J - 1] since J = NT at that late point in the code
 --EG, RG, EE, RE, AA, BB, FF, SIGM are not defined by the time they're used as CURFIT parameters
 --GLS, GUS, FRACS, DNN, GLSN, and GUSN are (10, 5) arrays, but their last entries in DONPUT have only 4 values (DNN, GLSN, and GUSN each have just the one 4-value entry).
 --Some loop variables are used as both array indeces and in equations, but arrays start at 1 in FORTRAN instead of 0 in Python. I believe I've adjusted appropriately, but any errors should look here first.
@@ -15,6 +15,8 @@ Possible problems:
 import math
 import curfit
 import convert
+#GAMMA was not run in the Test Run data
+#import gamma
 import reldens
 import prompt
 import ngamma
@@ -101,7 +103,7 @@ def d():
 		GRPLO[I] = GLS[I][NSPEC]
 		GRPHI[I] = GUS[I][NSPEC]
 		FRAC[I] = FRACS[I][NSPEC]
-	curfit.curfit(GRPLO, GRPHI, EG, RG, EE, RE, AA, BB, FF, NGROUP, PI, SIGM)
+	curfit.curfit(GRPLO, GRPHI, eg, rg, ee, re, aa, bb, ff, NGROUP, PI, sigm)
 	
 	#THESE STATEMENTS SET UP THE NEUTRON-GAMMA SPECTRUM 
 	I2 = 1
@@ -115,7 +117,11 @@ def d():
 		GRPHIN[I] = GUSN[I][NSPECN]
 		DN[I] = DNN[I][NSPECN]
 	
-	convert.convert(CN, CNN, EG, G, G1, G2, GRPHI, GRPLO, H, HZ, NGRPN)
+	convert.convert(cn, cnn, eg, g, g1, g2, GRPHI, GRPLO, H, hz, NGRPN)
+	
+	#GAMMA was not run in the Test Run data
+	#gamma.gamma(ai, ciso, di, DN, DT, edep, edei, eden, engi, engp, engn, FRAC, fracis, gdoti, gdotn, GRPHI, grphii, GRPHIN, GRPLO, grploi, GRPLON, gdot, gtime, GCAL, hz, I1, IFUN, ndei, nden, NGROUP, ngrpi, NGRPN, ntrani, rdt, SIZ, sn, sor, totali, totaln, trani, peak)
+	
 	#End of test run initializations
 	
 	CINC = 3 * NDR * NT 
