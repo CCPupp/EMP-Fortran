@@ -1,7 +1,9 @@
 '''
 Possible problems:
---Should NGS be 10 or 9?
---RAD(1,X) becomes rad[0][X], RAD(2,X) becomes rad[1][X], RHO(1, X) becomes RHO[0][X]
+--RAD(1,X) becomes rad[0][X]
+--RAD(2,X) becomes rad[1][X]
+--RHO (1, NT2) becomes RHO[0][NT2 - 1]
+--QH (I, J) = QH (I, J) + QH1 (I, J) becomes QH[I][J - 1] = QH[I][J - 1] + QH1[I][J - 1] since J = NT at that late point in the cose
 --EG, RG, EE, RE, AA, BB, FF, SIGM are not defined by the time they're used as CURFIT parameters
 --GLS, GUS, FRACS, DNN, GLSN, and GUSN are (10, 5) arrays, but their last entries in DONPUT have only 4 values (DNN, GLSN, and GUSN each have just the one 4-value entry).
 --Some loop variables are used as both array indeces and in equations, but arrays start at 1 in FORTRAN instead of 0 in Python. I believe I've adjusted appropriately, but any errors should look here first.
@@ -11,6 +13,13 @@ Possible problems:
 '''
 
 import math
+import curfit
+import convert
+import reldens
+import prompt
+import ngamma
+#not running ISOMER per Colonel Fee
+#import isomer
 
 def d(): 
 	COUNT = 0.0
@@ -82,6 +91,7 @@ def d():
 	TPEAK = 1e-7
 	
 	#THESE STATEMENTS DETERMINE THE PROMPT GAMMA ENERGY GROUPS
+	I1 = 1 #Added to ensure prompt subroutine is run
 	ISPEC = "SPE"
 	NSPEC = 0
 	SUMS = 0.0
@@ -91,7 +101,7 @@ def d():
 		GRPLO[I] = GLS[I][NSPEC]
 		GRPHI[I] = GUS[I][NSPEC]
 		FRAC[I] = FRACS[I][NSPEC]
-	CURFIT(GRPLO, GRPHI, EG, RG, EE, RE, AA, BB, FF, NGROUP, PI, SIGM)
+	curfit.curfit(GRPLO, GRPHI, EG, RG, EE, RE, AA, BB, FF, NGROUP, PI, SIGM)
 	
 	#THESE STATEMENTS SET UP THE NEUTRON-GAMMA SPECTRUM 
 	I2 = 1
@@ -105,7 +115,7 @@ def d():
 		GRPHIN[I] = GUSN[I][NSPECN]
 		DN[I] = DNN[I][NSPECN]
 	
-	CONVERT()
+	convert.convert(CN, CNN, EG, G, G1, G2, GRPHI, GRPLO, H, HZ, NGRPN)
 	#End of test run initializations
 	
 	CINC = 3 * NDR * NT 
@@ -143,14 +153,14 @@ def d():
 			N += 1 #60
 		
 	#N-GAMMA PARAMETERS
-	if (I1 != 2) : #70
+	if (I2 != 2) : #70
 		M = 0
 		while (M < NGRPN) : #80
 			DN[M] =  DN[M] * CASEN
 			M += 1 #90
 		
 	#ISOMERIC PARAMETERS - not running ISOMER per Colonel Fee
-	#if (I1 != 2) : #100
+	#if (I3 != 2) : #100
 	#	L = 0
 	#	while (L < NISO) : #110
 	#		ROOTKI[L] = math.sqrt(DI[L])
@@ -180,7 +190,13 @@ def d():
 	#	K += 1 #160
 	
 	#RELATIVE AIR DENSITY AND INTEGRAL OF RHO * DR CALCULATION
-	reldens(nrad, rad, stdrho, ntm1, dnt, r, hob, dr2, rho, drrho, dr, ndr, nt, rhoh, drrhoh) #170
+	reldens.reldens(NRAD, RAD, STDRHO, NTM1, DNT, R, HOB, DR2, RHO, DRRHO, DR, NDR, NT, RHOH, DRRHOH) #170
+	
+	#Open save file
+	fh = open("D Code Output.txt", "w")
+	fh.write("TIME\tRANGE\tCURRENT\tION-RATE(H)\tIONRATE\n")
+	
+	#Main loop - yes, everything previous was initialization!
 	NS = 0
 	while (NS < NGS) :
 		#RESTART check at 180 removed - subroutine not needed in Python
@@ -188,7 +204,7 @@ def d():
 		DT = DTS[NS] #200
 		NDT = NDTS[NS]
 		DT2 = DT * 0.5
-		RDT = 2.0 / (RHO[0][NT2] * DT)
+		RDT = 2.0 / (RHO[0][NT2 - 1] * DT)
 		#"SENSE SWITCH" code at 871 and 872 removed - we have much better ways of aborting programs now!
 		if (COUNT - 3.5e6 < 0) : #if >= 0, program terminates
 			COUNT = COUNT + CINC #210
@@ -210,27 +226,33 @@ def d():
 			
 			#CALCULATE THE CURRENT AND IONIZATION RATE
 			if (I1 != 2) :
-				PROMPT()
+				prompt.prompt(DECG, FREG, DECQ, DECJ, L, EXP, IFIT, DT, DT2, NMAX, TRIP, TDR, SOURCE, SOR, DTDR, TAU, TPEAK, R, CONJ, CONQ, RHOH, DRRHOH, FC, FF, RERG, EERG, EG, BB, AA, SN, NGROUP, FJH, QH, RHO, DRRHO, RGI, Q, NTM1, NDR, NT)
 			if (I2 != 2) :
-				NGAMMA()
-			if (I3 != 2) :
-				ISOMER()
+				ngamma.ngamma(TAU, TPEAK, R, CONJ, CONQ, RHOH, DRRHOH, FC, FF, RERG, EERG, EG, BB, AA, SN, NGROUP, FJH, QH, RHO, DRRHO, RGI, Q, NTM1, NDR, NT)
+			#not running ISOMER per Colonel Fee
+			#if (I3 != 2) :
+			#	ISOMER(AAISO, CISO, CONJ, CONQ, CONISO, DII, DRRHO, DRRHOH, EERGI, EGISO, EXKI, FCISO, FFISO, FJH, FREGI, NISO, NGRPI, NDR, NT, NGROUP, Q, QH, RHO, RHOH, R, RERG, RGISOI, ROOTKI, SORISO, TAU)
 			#CONTINUE at 300 removed, as well as the following PRINT statement
 			I = 0
-			while (I < NDR ) :
+			while (I < NDR) :
 				J = 0
 				while (J < NTM1) :
 					QH[I][J] = QH[I][J] + QH1[I][J]
 					Q[I][J] = Q[I][J] + Q1[I][J]
 					J += 1 #310
 				J = NT
-				QH[I][J] = QH[I][J] + QH1[I][J]
+				QH[I][J - 1] = QH[I][J - 1] + QH1[I][J - 1]
 				I += 1 #320
 			
 			#print to file
-			fh = open("D Code Output.txt", "w")
-			fh.write("TIME\tRANGE\tCURRENT\tION-RATE(H)\tIONRATE\n")
-			#TODO: write data to file
-			fh.close()
+			fh.write(str(TAU)+'\t') #write time
+			fh.write(str(R[0])+'\t') #write range
+			fh.write(str(FJH[0][NT2 - 1])+'\t') #write current
+			fh.write(str(QH[0][NT2 - 1])+'\t') #write ion rate(h)
+			fh.write(str(Q[0][NT2 - 1])+'\n') #write ion rate
+			fh.write()
+	
+	#Close file
+	fh.close()
 
 d()
