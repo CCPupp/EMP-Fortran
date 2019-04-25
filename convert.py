@@ -1,7 +1,7 @@
 import math
 import sys
 
-def convert(cn, cnn, ngrpn)
+def convert(cn, cnn, eg, g, g1, g2, grphi, grplo, h, hz, ngrpn)
 
     ni=1
     p1=0.0
