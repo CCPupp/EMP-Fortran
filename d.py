@@ -254,5 +254,3 @@ def d():
 	
 	#Close file
 	fh.close()
-
-d()
