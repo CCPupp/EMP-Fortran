@@ -2,7 +2,7 @@
 Code transcribed into Python 3.7 from Fortran 4 to emulate EMP blasts in the atmosphere.
 
 ### How to run:
-* Install python 3.7 or later
+* Install (python 3.7)[https://www.python.org/downloads/] or later
 * Direct a terminal to the folder containing main.py
 * Run the command `python main.py`
 
