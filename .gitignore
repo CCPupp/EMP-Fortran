@@ -1,0 +1,5 @@
+# folder holding cached files
+__pycache__
+
+# the files themselves
+*.pyc
