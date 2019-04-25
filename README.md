@@ -1,35 +1,35 @@
-### EMP-Fortran
+# EMP-Fortran
 Code transcribed into Python 3.7 from Fortran 4 to emulate EMP blasts in the atmosphere.
 
-# How to run:
+### How to run:
 * Install python 3.7 or later
 * Direct a terminal to the folder containing main.py
 * Run the command `python main.py`
 
-### Method progress
+# Method progress
 
-# main.py
+### main.py
 Installs all needed plugins (SciPy) on startup, then calls the testing script "d.py"
 
-# d.py
+### d.py
 Still work in progress
 
-# convert.py
+### convert.py
 
-# convo.py
+### convo.py
 
-# dawson.py
+### dawson.py
 
-# gamma.py
+### gamma.py
 
-# isomer.py
+### isomer.py
 
-# ngamma.py
+### ngamma.py
 
-# prompt.py
+### prompt.py
 
-# reldens.py
+### reldens.py
 
-# source.py
+### source.py
 
-# sourcen.py
+### sourcen.py
