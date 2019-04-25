@@ -49,7 +49,7 @@ def do(DECG, FREG, DECQ, DECJ, L, EXP, NINCR, TDR, SOURCE, SOR, DTDR, TAU, TPEAK
                     CONVQ = AH * CONVQ
                 else:
                     DELFRJ = AJ * EXP[DCJ * ROOTL]
-                    DELFRQ = AH * EXP[DCQ + ROOTL]
+                    DELFRQ = AH * EXP[DCQ * ROOTL]
                     CONVJ = CONVJ + SORL * DELFRJ + SORT
                     CONVQ = CONVQ + SORL * DELFRQ + SORT
                     CUR = CONVJ * CONSJ * FREG[K] + CUR
