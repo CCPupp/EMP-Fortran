@@ -1,28 +1,32 @@
+#Code written by C. Lawson Woodward
 #!/usr/bin/python
 
-#25 COMMON variables: TAU, TPEAK, R[250], CONJ, CONQ, RHOH[250][16], DRRHOH[250][16], FC[50], FF[50], RERG[50], EERG[50], EG[50], BB[50], AA[50], SN[10], NGROUP, FJH[250][16], QH[250][16], RHO[250][15], DRRHO[250][15], RGI[50], Q[250][16], NTM1, NDR, NT
-#
-#Subroutine reads from all parameters but only writes to FJH[250][16], QH[250][16], and Q[250][16].
-#
-#NDR indicates when the top loop layer (common to both nests) should end.
-#NT indicates when the middle layer loop of the first nest should end.
-#NTM1 indicates when the middle layer loop of the second nest should end.
-#NGROUP indicates when the bottom layers of both nested loops should end.
-#
-#The square root of TAU - TPEAK is required to run this subroutine. If TAU - TPEAK is negative, the subroutine is skipped entirely.
-#
-#Parameters read in the top loop: R[250], CONJ, CONQ
-#
-#Parameters read in the first middle loop: RHOH[250][16], DRRHOH[250][16]
-#Parameters read in the second middle loop: RHO[250][15], DRRHO[250][15]
-#
-#Parameters read in both bottom loops: RGI[50], FC[50], FF[50], EERG[50], EG[50], AA[50], SN[10]
-#Parameters additionally read in the first bottom loop: DRRHOH[250][16], RERG[50], BB[50]
-#Parameter additionally read in the second bottom loop: DRRHO[250][15]
+'''
+25 COMMON variables: TAU, TPEAK, R[250], CONJ, CONQ, RHOH[250][16], DRRHOH[250][16], FC[50], FF[50], RERG[50], EERG[50], EG[50], BB[50], AA[50], SN[10], NGROUP, FJH[250][16], QH[250][16], RHO[250][15], DRRHO[250][15], RGI[50], Q[250][16], NTM1, NDR, NT
+
+Subroutine reads from all parameters but only writes to FJH[250][16], QH[250][16], and Q[250][16].
+
+NDR indicates when the top loop layer (common to both nests) should end.
+NT indicates when the middle layer loop of the first nest should end.
+NTM1 indicates when the middle layer loop of the second nest should end.
+NGROUP indicates when the bottom layers of both nested loops should end.
+
+The square root of TAU - TPEAK is required to run this subroutine. If TAU - TPEAK is negative, the subroutine is skipped entirely.
+
+Parameters read in the top loop: R[250], CONJ, CONQ
+
+Parameters read in the first middle loop: RHOH[250][16], DRRHOH[250][16]
+Parameters read in the second middle loop: RHO[250][15], DRRHO[250][15]
+
+Parameters read in both bottom loops: RGI[50], FC[50], FF[50], EERG[50], EG[50], AA[50], SN[10]
+Parameters additionally read in the first bottom loop: DRRHOH[250][16], RERG[50], BB[50]
+Parameter additionally read in the second bottom loop: DRRHO[250][15]
+'''
 
 import math
 
-def ngamma(TAU, TPEAK, R, CONJ, CONQ, RHOH, DRRHOH, FC, FF, RERG, EERG, EG, BB, AA, SN, NGROUP, FJH, QH, RHO, DRRHO, RGI, Q, NTM1, NDR, NT):
+
+def NGAMMA(TAU, TPEAK, R, CONJ, CONQ, RHOH, DRRHOH, FC, FF, RERG, EERG, EG, BB, AA, SN, NGROUP, FJH, QH, RHO, DRRHO, RGI, Q, NTM1, NDR, NT):
     if (TAU > TPEAK):  # TAU and TPEAK are COMMON; if TAU <= TPEAK, NGAMMA is skipped entirely
         TROOT = math.sqrt(TAU - TPEAK)  # TAU and TPEAK are COMMON
         i = 0
@@ -71,7 +75,7 @@ def ngamma(TAU, TPEAK, R, CONJ, CONQ, RHOH, DRRHOH, FC, FF, RERG, EERG, EG, BB, 
                     # DRRHO[250][15] and RGI[50] are COMMON
                     GMFP = DRRHO[i][j] * RGI[k]
                     # FC[50] and FF[50] are COMMON
-                    FACTO = FC[k] + FF[k] + GMFP
+                    FACTO = FC[k] + FF[k] * GMFP
                     # EERG[50] is COMMON
                     CONSG = CQG * EERG[k] * math.exp(-GMFP)
                     # EG[50] is COMMON
