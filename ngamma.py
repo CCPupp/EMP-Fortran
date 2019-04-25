@@ -26,7 +26,7 @@ Parameter additionally read in the second bottom loop: DRRHO[250][15]
 import math
 
 
-def NGAMMA(TAU, TPEAK, R, CONJ, CONQ, RHOH, DRRHOH, FC, FF, RERG, EERG, EG, BB, AA, SN, NGROUP, FJH, QH, RHO, DRRHO, RGI, Q, NTM1, NDR, NT):
+def ngamma(TAU, TPEAK, R, CONJ, CONQ, RHOH, DRRHOH, FC, FF, RERG, EERG, EG, BB, AA, SN, NGROUP, FJH, QH, RHO, DRRHO, RGI, Q, NTM1, NDR, NT):
     if (TAU > TPEAK):  # TAU and TPEAK are COMMON; if TAU <= TPEAK, NGAMMA is skipped entirely
         TROOT = math.sqrt(TAU - TPEAK)  # TAU and TPEAK are COMMON
         i = 0
