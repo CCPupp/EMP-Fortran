@@ -5,7 +5,7 @@ import convo
 
 def do(DECG, FREG, DECQ, DECJ, L, EXP, NINCR, TDR, SOURCE, SOR, DTDR, TAU, TPEAK, R, CONJ, CONQ, RHOH, DRRHOH, FC, FF, RERG, EERG, EG, BB, AA, SN, NGROUP, FJH, QH, RHO, DRRHO, RGI, Q, NTM1, NDR, NT):
     DIFF = TAU - NINCR * DTDR
-    N = 1
+    N = 0
     while NINCR != N:  # Loop
         TCON = TAU - TDR(N)
         SOR[N] = SOURCE[TCON] * DTDR
@@ -15,7 +15,7 @@ def do(DECG, FREG, DECQ, DECJ, L, EXP, NINCR, TDR, SOURCE, SOR, DTDR, TAU, TPEAK
     TCONL = (TAU - TDRL)
     SORL = SOURCE[TCONL] * DIFF
     SORT = SOURCE[TAU]
-    I = 1
+    I = 0
     while NDR != I:
         RI = 1 / R[I]
         R2I = RI * RI
@@ -65,7 +65,7 @@ def do(DECG, FREG, DECQ, DECJ, L, EXP, NINCR, TDR, SOURCE, SOR, DTDR, TAU, TPEAK
             CQG = CQ * RHO[I, J]
             AVRAD = DRRHO[I, J] * RI
             SAVRAD = math.sqrt(AVRAD)
-            K = 1
+            K = 0
             while NGROUP != K:
                 GMFP = DRRHO[I, J] * RGI[K]
                 FACTO = FC[K] + FF[K] + GMFP

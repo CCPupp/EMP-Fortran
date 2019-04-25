@@ -14,22 +14,22 @@ def gamma(ai, ciso, di, dn, dt, edep, edei, eden, engi, engp, engn, frac, fracis
     gcal = gcal/siz
     total = 0.0
 
-    if ((i1 <= 1)  or (i1 > 2)):  #GO TO(10, 160), I1
+    if ((i1 <= 1)  or (i1 > 2)):  #GO TO(10, 160), I1 - STOPS AT 160
 
         if ((ifun != 2)): #GO TO (30, 20, 30, 30), IFUN            #10
             ifun2 = ifun                                        
             ifun = 1                                               #20
-            ###GO TO 40#################working on this!!!!!!####################################################
+            ###GO TO 40#################working on this!!!!!!################################
                                
         #if ncal =1 go to 40, if ncal = 2 go to 80                 #30
         if (ncal == 1):
 
             i = 2
             while (i < 250): #ENDS AT 50                           #40
-                t1 = i * dt                #ORIGINAL FORTRAN HAD T * DT... I think it was supposed to be I * DT???
+                t1 = i * dt                #Original Fortran had T * DT... I think it was supposed to be I * DT???
                 t2 = (i-1) * dt    
-                s1 = source(t1)
-                s2 = source(t2)
+                s1 = source.source(t1)
+                s2 = source.source(t2)
                 i += 1
             #end while loop                                            #50
             
@@ -53,7 +53,7 @@ def gamma(ai, ciso, di, dn, dt, edep, edei, eden, engi, engp, engn, frac, fracis
                 i = 1
                 while (i < 250):                                    #80
                     t = (i - 0.5) * dt
-                    total = total + source(t) + dt
+                    total = total + source.source(t) * dt
                     i += 1
                 #end while loop                                     #90
                 cay = gcal/total
@@ -64,8 +64,8 @@ def gamma(ai, ciso, di, dn, dt, edep, edei, eden, engi, engp, engn, frac, fracis
         t = 1 * dt2
         t1 = i * dt
         gtime(i-1) = t1           #Original Fortran code had gtime(i). Fortran arrays start at 1.
-        gdot (i-1) = source(t1)   #Original Fortran code had gdot(i). Fortran arrays start at 1.
-        total = source(t) * dt
+        gdot (i-1) = source.source(t1)   #Original Fortran code had gdot(i). Fortran arrays start at 1.
+        total = source.source(t) * dt
 
         i = 2
         while (i < 250):
@@ -73,8 +73,8 @@ def gamma(ai, ciso, di, dn, dt, edep, edei, eden, engi, engp, engn, frac, fracis
             t = (i - 0.5) * dt
             t1 = i * dt
             gtime(i-1) = t1         #Original Fortran code had gtime(i). Fortran arrays start at 1.
-            gdot(i-1) = source(t1)  #Original Fortran code had gdot(i). Fortran arrays start at 1.
-            total = total + source(t) + dt
+            gdot(i-1) = source.source(t1)  #Original Fortran code had gdot(i). Fortran arrays start at 1.
+            total = total + source.source(t) * dt
             if ((ig == 1) or (ig < 1) or (ig > 2)):
                 if ((gdot(i-1) - gdot(i-2)) < 0):                    #110  #Original Fortran code had gdot(i) - dgot(i-1). Fortray arrays start at 1.
                     peak = gdot(i-2)                                 #120  #Original Fortran code had gdot(i-1). Fortran arrays start at 1.
@@ -130,7 +130,7 @@ def gamma(ai, ciso, di, dn, dt, edep, edei, eden, engi, engp, engn, frac, fracis
             #if neg go to 210, if 0 or pos go to 190
             if ((taut - tspeak) >= 0):
                 #CALL SOURCEN                                     #190
-                sourcen()
+                sourcen.sourcen()
                     
                 k = 1
                 while (k < ngroup):  
@@ -150,7 +150,7 @@ def gamma(ai, ciso, di, dn, dt, edep, edei, eden, engi, engp, engn, frac, fracis
             m += 1
 
         #CALL SOURCEN
-        sourcen()
+        sourcen.sourcen()
                 
         m= 1
         while (m < ngrpn-1):
@@ -167,7 +167,7 @@ def gamma(ai, ciso, di, dn, dt, edep, edei, eden, engi, engp, engn, frac, fracis
         i = 1
         while (i < 1000):
             #CALL SOURCEN
-            sourcen()
+            sourcen.sourcen()
             k=1
             while ((k-1) < (ngroup-1)):  #Changed k and ngroup to (k-1) and (ngroup-1) because Fortran arrays start at 1
                 summ = summ + sn(k-1) * 0.00000005                #250   #Changed sn(k) because Fortran arrays start at 1
