@@ -6,6 +6,9 @@ Code transcribed into Python 3.7 from Fortran 4 to emulate EMP blasts in the atm
 * Direct a terminal to the folder containing main.py
 * Run the command `python main.py`
 
+### How to copy:
+The "Fork" button in the top right will allow you to create your own copy of the project to allow for further updates. 
+
 # Method progress
 
 ### main.py
@@ -41,3 +44,6 @@ Calculates the relative density of the air (Determines how many nitrogen atoms t
 ### source.py
 
 ### sourcen.py
+
+# Problems?
+Please report any issues to the issues tab and I will try and respond asap. 
