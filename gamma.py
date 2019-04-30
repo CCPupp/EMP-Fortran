@@ -16,48 +16,41 @@ def gamma(ai, ciso, di, dn, dt, edep, edei, eden, engi, engp, engn, frac, fracis
 
     if ((i1 <= 1)  or (i1 > 2)):  #GO TO(10, 160), I1 - STOPS AT 160
 
-        if ((ifun != 2)): #GO TO (30, 20, 30, 30), IFUN            #10
+        if ((ifun == 2)): #GO TO (30, 20, 30, 30), IFUN            #10 #Colonel Fee mentioned IFUN will always be 1
             ifun2 = ifun                                        
             ifun = 1                                               #20
-            ###GO TO 40#################working on this!!!!!!################################
-                               
-        #if ncal =1 go to 40, if ncal = 2 go to 80                 #30
-        if (ncal == 1):
-
-            i = 2
-            while (i < 250): #ENDS AT 50                           #40
-                t1 = i * dt                #Original Fortran had T * DT... I think it was supposed to be I * DT???
-                t2 = (i-1) * dt    
-                s1 = source.source(t1)
-                s2 = source.source(t2)
-                i += 1
-            #end while loop                                            #50
+            ###GO TO 40
+                                           
+        #if (ncal == 1):                                           #30 #Colonel Fee mentioned IFUN will always be 1 so we need to jump to 40
+        i = 2                                                      #40
+        while (i < 250): #ENDS AT 50                           
+            t1 = i * dt                #Original Fortran had T * DT... I think it was supposed to be I * DT???
+            t2 = (i-1) * dt    
+            s1 = source.source(t1)
+            s2 = source.source(t2)
+            i += 1
+        #end while loop                                            
             
-                #if (s1 - s2) 60, 50, 50
-                #go to 60 if neg, go to 50 if 0 or positive
-                if ((s1 - s2) >= 0):
-                    #(print 410, ifun)
-                    #example: PRINT f, list (f is a format reference, list is what is being printed)
-                    sys.exit("Error occured. ifun is: {0}.".format(ifun)) #stop
+            if ((s1 - s2) >= 0): #go to 50 if 0 or positive. Go to 60 if negative.
+                #CONTINUE                                          #50
+                sys.exit("Error occured. ifun is: {0}.".format(ifun)) #Print an error, then "STOP"
                 
-            peak = s2                                                  #60
-            cay = gcal/peak
+        peak = s2                                                  #60
+        cay = gcal/peak
 
-            if ((ifun2 - 2) == 0):
-                peak2 = peak                                           #70
-                ifun = ifun2
-                if (ncal == 2):
-                    cay = 1.0                                          #75
-##################################end of "working on this"!!!!!#################################################
-                    
-                i = 1
-                while (i < 250):                                    #80
-                    t = (i - 0.5) * dt
-                    total = total + source.source(t) * dt
-                    i += 1
-                #end while loop                                     #90
-                cay = gcal/total
-        #end last two if statements                                 #100
+        if ((ifun2 - 2) == 0):
+            peak2 = peak                                           #70
+            ifun = ifun2
+            if (ncal == 2):
+                cay = 1.0                                          #75                    
+            i = 1
+            while (i < 250):                                       #80
+                t = (i - 0.5) * dt
+                total = total + source.source(t) * dt
+                i += 1
+            #end while loop                                        #90
+            cay = gcal/total
+        #end last two if statements                                #100
             
         ig = 1
         i = 1
@@ -116,7 +109,7 @@ def gamma(ai, ciso, di, dn, dt, edep, edei, eden, engi, engp, engn, frac, fracis
 
     #GO TO (170, 310), I2
     if(i2 == 1):                                                  #160
-        rdt = math.exp(tablin.tablin(rad, 2, nrad, hob, 1)/stdrho)       #170      #TABLIN!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        rdt = math.exp(tablin.tablin(rad, 2, nrad, hob, 1)/stdrho)       #170
         rdt = 2.0/ (rdt * dt)
 
         m = 1

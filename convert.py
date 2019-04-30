@@ -40,7 +40,7 @@ def convert(cn, eg, grphi, grplo, hz, ngrpn):
                     j = i                                                    #50
                 elif ((grphi[k] - g1[i]) > 0): #if pos go to 60
                     #GO TO 160
-                        #ADDING EVERYTHING FROM 160 TO END OF LOOP TO FIX THIS: 
+                    #Adding everything from 160 to end of loop to accomodate GO TO 160: 
                     m = 1
                     while (m < ngrpn):                                                #160-copy
                         hsum = 0.0
@@ -105,12 +105,12 @@ def convert(cn, eg, grphi, grplo, hz, ngrpn):
                             hsum = hsum + h[l][m] * g[l]
                         #end while loop                                           #180
 
-                    if ((i - j - 1) == 0): #Seems a little strange - check this again.
+                    elif ((i - j - 1) == 0): 
                         hsum = hsum + p2 * h[i][m] * g[i]                          #190
                         hsum = hsum + p1 * h[j][m] * g[j]                          #200-copy
                         hz[k][m] = hsum/eg[k]                                      #copied as well
 
-                    if ((i - j - 1) > 0):#THIS IS WRONG, CLEAN THIS UP
+                    else: #if ((i - j - 1) > 0)
                         hsum = hsum + p1 * h[j][m] * g[j]                          #200
                         hz[k][m] = hsum/eg[k]
                 #CONTINUE end while loop                                          #210
